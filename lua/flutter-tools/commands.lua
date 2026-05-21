@@ -417,7 +417,22 @@ function M.copy_profiler_url()
 end
 
 ---@param quiet boolean?
-function M.open_dev_tools(quiet) send("open_dev_tools", quiet) end
+function M.open_dev_tools(quiet)
+  if not M.is_running() then
+    if not quiet then ui.notify("You must run the app first!") end
+    return
+  end
+
+  local url, is_running = dev_tools.get_profiler_url()
+
+  if url then
+    dev_tools.open_dev_tools()
+  elseif is_running then
+    if not quiet then ui.notify("Wait while the app starts", "please try again later") end
+  else
+    send("open_dev_tools", quiet)
+  end
+end
 
 ---@param quiet boolean
 function M.generate(quiet) send("generate", quiet) end
@@ -642,6 +657,7 @@ end
 if __TEST then
   M.__run = run
   M.__get_run_args = get_run_args
+  M.__set_runner = function(test_runner) runner = test_runner end
 end
 
 return M
