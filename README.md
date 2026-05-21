@@ -149,6 +149,7 @@ require("flutter-tools").setup {} -- use defaults
 
 - `FlutterRun` - Run the current project. Respects `config.debugger.enabled` setting.
 - `FlutterDebug` - Force run current project in debug mode.
+- `FlutterCommands` - Open a `vim.ui.select` picker with the available Flutter tools commands.
 - `FlutterDevices` - Brings up a list of connected devices to select from.
 - `FlutterEmulators` - Similar to devices but shows a list of emulators to choose from.
 - `FlutterReload` - Reload the running project.
@@ -436,6 +437,8 @@ see `:h statusline` for more information on how to create a statusline.
 ![telescope picker](https://user-images.githubusercontent.com/22454918/113897929-495a3e80-97c3-11eb-959f-9574319cd93c.png)
 
 You can list available commands in this plugin using [telescope.nvim](https://github.com/nvim-telescope/telescope.nvim).
+
+If you want a built-in picker instead, run `:FlutterCommands` to choose a command through `vim.ui.select`.
 
 In order to set this up, you can explicitly load the extension.
 

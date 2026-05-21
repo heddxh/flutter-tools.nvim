@@ -10,6 +10,7 @@ local decorations = lazy.require("flutter-tools.decorations") ---@module "flutte
 local guides = lazy.require("flutter-tools.guides") ---@module "flutter-tools.guides"
 local log = lazy.require("flutter-tools.log") ---@module "flutter-tools.log"
 local lsp = lazy.require("flutter-tools.lsp") ---@module "flutter-tools.lsp"
+local menu = lazy.require("flutter-tools.menu") ---@module "flutter-tools.menu"
 local outline = lazy.require("flutter-tools.outline") ---@module "flutter-tools.outline"
 local devices = lazy.require("flutter-tools.devices") ---@module "flutter-tools.devices"
 local utils = lazy.require("flutter-tools.utils") ---@module "flutter-tools.utils"
@@ -27,6 +28,7 @@ local function setup_commands()
   command("FlutterLspRestart", lsp.restart)
   command("FlutterAttach", function(data) commands.attach(data.args) end, { nargs = "*" })
   command("FlutterDetach", commands.detach)
+  command("FlutterCommands", menu.select_commands)
   command("FlutterReload", commands.reload)
   command("FlutterRestart", commands.restart)
   command("FlutterQuit", commands.quit)

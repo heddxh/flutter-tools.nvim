@@ -16,15 +16,18 @@ local M = {}
 
 -- Accounts for the vertical padding implicit in the dropdown.
 local MENU_PADDING = 4
+local COMMANDS_TITLE = "Flutter tools commands"
+
+local function run_command(cmd, ...)
+  if not cmd then return end
+  local success, msg = pcall(cmd, ...)
+  if not success then ui.notify(msg, ui.ERROR) end
+end
 
 local function execute_command(bufnr)
   local selection = action_state.get_selected_entry()
   actions.close(bufnr)
-  local cmd = selection.command
-  if cmd then
-    local success, msg = pcall(cmd)
-    if not success then ui.notify(msg, ui.ERROR) end
-  end
+  run_command(selection.command)
 end
 
 local function command_entry_maker(max_width)
@@ -97,7 +100,8 @@ function M.get_config(items, user_opts, opts)
   }))
 end
 
-function M.commands(opts)
+---@return TelescopeEntry[]
+local function get_commands()
   local cmds = {}
 
   if commands.is_running() then
@@ -265,7 +269,28 @@ function M.commands(opts)
     })
   end
 
-  pickers.new(M.get_config(cmds, opts, { title = "Flutter tools commands" })):find()
+  return cmds
+end
+
+local function format_command_item(item)
+  local has_hint = item.hint and item.hint ~= ""
+  if has_hint then return ("%s • %s"):format(item.label, item.hint) end
+  return item.label
+end
+
+function M.commands(opts)
+  pickers.new(M.get_config(get_commands(), opts, { title = COMMANDS_TITLE })):find()
+end
+
+function M.select_commands()
+  vim.ui.select(get_commands(), {
+    prompt = COMMANDS_TITLE,
+    kind = "flutter-tools",
+    format_item = format_command_item,
+  }, function(selection)
+    if not selection then return end
+    run_command(selection.command)
+  end)
 end
 
 local function execute_fvm_use(bufnr)
